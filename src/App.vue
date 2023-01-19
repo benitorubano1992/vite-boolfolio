@@ -1,9 +1,15 @@
 <script>
+
+import AppHeader from "./components/AppHeader.vue";
+import AppMain from "./components/AppMain.vue";
 export default {
+
   name: "App",
+  components: { AppHeader, AppMain },
   data() {
     return {
-      title: "pagina vue con bootstrap and sass"
+      title: "pagina vue con bootstrap and sass",
+      projects: []
     }
   },
   methods: {},
@@ -13,7 +19,11 @@ export default {
 }
 </script>
 <template>
-  <h1>{{ title }}</h1>
+  <AppHeader />
+  <main>
+    <AppMain />
+  </main>
+
 </template>
 <style  lang="scss">
 @use "./styles/general.scss" as *;
