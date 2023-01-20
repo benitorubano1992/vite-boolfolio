@@ -8,22 +8,34 @@ export default {
         return {
             projects: [],
             baseUrl: "http://127.0.0.1:8000",
-            loading: true
+            loading: true,
+            currentPage: 1,
+            lastPage: null,
         }
     },
     methods: {
+        getProject(page) {
+            axios.get("http://127.0.0.1:8000/api/projects", {
+                params: { page }
+            })
+                .then(resp => {
+                    setTimeout(() => {
+                        console.log(resp)
+                        this.projects = resp.data.results.data;
+                        this.loading = false;
+                    }, 1000)
 
+                })
+        },
+        getUpdateProject(num) {
+            this.currentPage += num;
+            console.log(this.currentPage);
+            this.getProject(this.currentPage);
+        }
 
     },
     created() {
-        axios.get("http://127.0.0.1:8000/api/projects")
-            .then(resp => {
-                setTimeout(() => {
-                    this.projects = resp.data.results;
-                    this.loading = false;
-                }, 2000)
-
-            })
+        this.getProject(1);
     }
 }
 
@@ -41,6 +53,15 @@ export default {
         <div class="row justify-content-center" v-if="!loading">
             <div class="col-6">
                 <ProjectCard v-for="project in projects" :project="project" key="project.id" />
+                <nav class="d-flex justify-content-center my-4">
+                    <ul class="d-flex">
+                        <li class="mx-2"><a class="btn btn-primary " :class="{ 'disabled': currentPage === 1 }"
+                                role="button" aria-disabled="true" @click.prevent="getUpdateProject(-1)">Previous</a>
+                        </li>
+                        <li><a class="btn btn-primary" :class="{ 'disabled': currentPage === lastPage }"
+                                @click.prevent="getUpdateProject(+1)">Next</a></li>
+                    </ul>
+                </nav>
 
             </div>
 
@@ -81,5 +102,9 @@ export default {
     to {
         transform: rotate(359deg);
     }
+}
+
+ul {
+    list-style-type: none;
 }
 </style>

@@ -1,9 +1,24 @@
 <script>
 export default {
     name: "AppHeader",
+
     data() {
         return {
+            rotte: [
+                {
+                    label: "Home",
+                    rotta: "/"
+                },
+                {
+                    label: "About",
+                    rotta: "about"
+                },
+                {
+                    label: "Blog",
+                    rotta: "blog"
+                }
 
+            ]
         }
     }
 }
@@ -19,6 +34,32 @@ export default {
                     aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                <div class="collapse navbar-collapse " id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item" v-for="{ label, rotta } in rotte">
+                            <router-link :to="rotta" class="nav-link" :class="{ 'active': $route.name === rotta }"
+                                aria-current="page" href="#">{{ label }}</router-link>
+                        </li>
+
+                        <!-- <li class="nav-item"> 
+                            <router-link to="/" class="nav-link" :class="{ 'active': $route.name === 'home' }"
+                                aria-current="page" href="#">Home</router-link>
+                        </li>
+                        <li class="nav-item">
+                            <router-link :to="'about'" class="nav-link" :class="{ 'active': $route.name === 'about' }"
+                                aria-current="page">About</router-link>
+
+                        </li>
+                        <li class="nav-item">
+                            <router-link :to="'blog'" class="nav-link" :class="{ 'active': $route.name === 'blog' }"
+                                aria-current="page">Blog</router-link>
+
+                        </li>-->
+
+
+                    </ul>
+
+                </div>
             </div>
 
         </nav>

@@ -5,7 +5,7 @@ import AppMain from "./components/AppMain.vue";
 export default {
 
   name: "App",
-  components: { AppHeader, AppMain },
+  components: { AppHeader },
   data() {
     return {
       title: "pagina vue con bootstrap and sass",
@@ -20,9 +20,8 @@ export default {
 </script>
 <template>
   <AppHeader />
-  <main>
-    <AppMain />
-  </main>
+  <router-view></router-view>
+
 
 </template>
 <style  lang="scss">
