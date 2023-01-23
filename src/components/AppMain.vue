@@ -11,19 +11,27 @@ export default {
             loading: true,
             currentPage: 1,
             lastPage: null,
+            types: [],
+            totalResults: null,
+            selectType: ""
         }
     },
     methods: {
         getProject(page) {
             axios.get("http://127.0.0.1:8000/api/projects", {
-                params: { page }
+                params: {
+                    page,
+                    ...this.selectType && { type_id: this.selectType }
+                }
             })
                 .then(resp => {
-                    setTimeout(() => {
-                        console.log(resp)
-                        this.projects = resp.data.results.data;
-                        this.loading = false;
-                    }, 1000)
+                    console.log("risposta arrivata");
+                    console.log({ resp });
+                    this.projects = resp.data.results.data;
+                    this.totalResults = resp.data.results.total;
+                    this.lastPage = resp.data.results.last_page;
+                    this.loading = false;
+
 
                 })
         },
@@ -35,7 +43,18 @@ export default {
 
     },
     created() {
-        this.getProject(1);
+        this.projects = this.getProject(1);
+        Promise.all([axios.get("http://127.0.0.1:8000/api/projects"), axios.get("http://127.0.0.1:8000/api/types")])
+            .then(response => {
+
+                this.projects = response[0].data.results.data;
+                console.log(response[0].data.results.total)
+                this.totalResults = response[0].data.results.total;
+                this.lastPage = response[0].data.results.last_page;
+                this.types = response[1].data.results;
+            })
+            .catch(error => console.error(error))
+            .finally(() => this.loading = false)
     }
 }
 
@@ -43,15 +62,31 @@ export default {
 <template>
     <div class="container">
         <h3 class="text-center my-2 text-danger">Tutti i miei progetti</h3>
-        <div class="ms-loader d-flex justify-content-center align-items-center flex-column">
+        <div class="ms-loader d-flex justify-content-center align-items-center flex-column" v-if="loading">
             <div class="ms-circle">
 
             </div>
             <p class="py-3 text-align-right">Loading Projects...</p>
         </div>
 
-        <div class="row justify-content-center" v-if="!loading">
-            <div class="col-6">
+        <div class="col-6 mx-auto" v-else>
+            <div class="d-flex justify-content-between my-4 align-items-center">
+                <form class="d-flex" @submit.prevent="getProject(1)">
+                    <select class="form-select" v-model="selectType">
+                        <option value="">Tutti</option>
+                        <option v-for="tipologia in types" :value="tipologia.id">{{ tipologia.name }}</option>
+                    </select>
+                    <button type="submit" class="btn btn-success ms-3">Filtra</button>
+                </form>
+                <div>
+                    <p> sono stati trovati {{ totalResults }} progetti</p>
+                </div>
+
+            </div>
+            <div class="col-12 text-center text-danger py-5" v-if="projects.length === 0">
+                <h3>Non ci sono progetti associati a questo tipo</h3>
+            </div>
+            <div class="col-12" v-else>
                 <ProjectCard v-for="project in projects" :project="project" key="project.id" />
                 <nav class="d-flex justify-content-center my-4">
                     <ul class="d-flex">

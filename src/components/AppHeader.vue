@@ -2,12 +2,13 @@
 export default {
     name: "AppHeader",
 
+
     data() {
         return {
             rotte: [
                 {
                     label: "Home",
-                    rotta: "/"
+                    rotta: "home"
                 },
                 {
                     label: "About",
@@ -37,8 +38,10 @@ export default {
                 <div class="collapse navbar-collapse " id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item" v-for="{ label, rotta } in rotte">
-                            <router-link :to="rotta" class="nav-link" :class="{ 'active': $route.name === rotta }"
-                                aria-current="page" href="#">{{ label }}</router-link>
+                            <router-link :to="{ name: rotta }" class="nav-link"
+                                :class="{ 'active': $route.name === rotta }" aria-current="page" href="#">{{
+    label
+                                }}</router-link>
                         </li>
 
                         <!-- <li class="nav-item"> 

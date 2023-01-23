@@ -38,7 +38,9 @@ export default {
                 <span v-for="tecno in project.tecnologies">#{{ tecno.name }}</span>
             </p>
             <p v-if="project.type !== null">Tipo: {{ project.type.name }}</p>
-            <a href="#" class="btn btn-primary">Leggi di piu</a>
+            <router-link :to="{ name: 'Single-Post', params: { slug: project.slug } }" href="#"
+                class="btn btn-primary">Leggi di
+                piu</router-link>
         </div>
     </div>
 </template>
